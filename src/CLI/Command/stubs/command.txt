@@ -1,0 +1,19 @@
+<?php
+
+namespace {{namespace}}
+
+use Orbit\Machine\CLI\Command\Command;
+
+class {{class}} extends Command
+{
+
+    protected $name = '{{name}}';
+
+    protected $description = '{{description}}';
+
+    public function fire()
+    {
+        // do something
+    }
+
+}

@@ -1,0 +1,13 @@
+<?php
+
+namespace {{namespace}};
+
+use {{namespace}}\ControllerBase;
+
+class {{class}} extends ControllerBase
+{
+    public function indexAction()
+    {
+        // do something
+    }
+}

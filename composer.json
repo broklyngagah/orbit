@@ -1,0 +1,31 @@
+{
+    "name": "orbit/machine",
+    "description": "Orbit skeleton machine.",
+    "authors": [
+        {
+            "name": "pieter lelaona",
+            "email": "broklyn.gagah@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.5",
+        "twig/twig": "1.*",
+        "symfony/console": "~2.7",
+        "symfony/finder": "~2.7",
+        "swiftmailer/swiftmailer": "5.*",
+        "vlucas/phpdotenv": "dev-master"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~4.0",
+        "tracy/tracy": "~2.3"
+    },
+    "minimum-stability": "dev",
+    "autoload": {
+        "psr-4": {
+            "Orbit\\Machine\\": "src/"
+        },
+        "files": [
+            "src/Support/helpers.php"
+        ]
+    }
+}

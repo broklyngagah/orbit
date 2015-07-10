@@ -1,0 +1,14 @@
+<?php
+
+namespace App\Model;
+
+use Orbit\Machine\Db\Model\BaseModel;
+
+class {{class}} extends BaseModel
+{
+    {{timestampable}}
+
+    protected $source = {{table}}
+
+    public $id;
+}
