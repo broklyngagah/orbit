@@ -17,6 +17,9 @@ use Phalcon\Events\Manager as EventManager;
 use Phalcon\Loader;
 use Phalcon\Di\InjectionAwareInterface;
 use Phalcon\Events\EventsAwareInterface;
+use Orbit\Machine\Config\Config;
+use Symfony\Component\Debug\Debug;
+use Symfony\Component\Debug\DebugClassLoader;
 
 /**
  * Class Bootstrap
@@ -35,11 +38,6 @@ class Bootstrap implements InjectionAwareInterface, EventsAwareInterface
      */
     protected $config;
 
-    /**
-     * Config dump format.
-     * @var array
-     */
-    protected $configDump;
 
     /**
      * Configuration files directory.
@@ -67,17 +65,10 @@ class Bootstrap implements InjectionAwareInterface, EventsAwareInterface
     protected $services;
 
     /**
-     * Application base / root pah.
-     * @var string
-     */
-    protected $basePath;
-
-    /**
      * @param \Orbit\Machine\Config $config
      * @param \Phalcon\DiInterface  $di
-     * @internal param bool $debug
      */
-    public function __construct(Config $config, DiInterface $di = null, $basePath = null)
+    public function __construct(Config $config, DiInterface $di = null)
     {
         if(is_null($di)) {
             $this->setDI(new FactoryDefault);
@@ -87,9 +78,9 @@ class Bootstrap implements InjectionAwareInterface, EventsAwareInterface
         }
 
         $this->config = $config;
-        $this->configDump = $this->config->dump();
-        $this->configDir = $this->config->getDirectory();
-        $this->setBasePath($basePath);
+
+        $this->configDir = $config->getDirectory();
+
         $this->setEventsManager(new EventManager);
     }
 
@@ -104,18 +95,16 @@ class Bootstrap implements InjectionAwareInterface, EventsAwareInterface
             return;
         }
 
-        $config = $this->configDump;
+        $config = $this->config;
 
-        $serviceList = $config->app->services;
+        $serviceList = $config['app']['services'];
 
         $di = $this->di;
 
         foreach($serviceList as $name => $service) {
-            $this->di[$name] = function () use ($service, $di, $config) {
+            $this->di->setShared($name, function () use ($service, $di, $config) {
                 return (new $service($di, $config))->register();
-            };
-
-            //$this->di[$name] = (new $service($di, $config))->register();
+            });
         }
 
         return;
@@ -128,31 +117,13 @@ class Bootstrap implements InjectionAwareInterface, EventsAwareInterface
      */
     public function registerAutoload()
     {
-        $config = $this->configDump->loader->namespaces->toArray();
-
+        $config = $this->config['loader']['namespaces'];
+        
         $loader = new Loader;
         $loader->registerNamespaces($config)
                ->register();
 
         return;
-    }
-
-    /**
-     * Set the base path of application and inject to DI service container.
-     *
-     * @param string $basePath
-     *
-     * @return mixed
-     */
-    protected function setBasePath($basePath)
-    {
-        if(is_null($basePath)) return $this;
-
-        $this->di->setShared('basePath', function() use ($basePath) {
-            return $basePath;
-        });
-
-        return $this;
     }
 
     /**
@@ -162,7 +133,7 @@ class Bootstrap implements InjectionAwareInterface, EventsAwareInterface
      */
     public function getBasePath()
     {
-        return $this->basePath;
+        return $this->config['base_path'];
     }
 
     /**
@@ -172,13 +143,25 @@ class Bootstrap implements InjectionAwareInterface, EventsAwareInterface
      */
     public function registerEvents()
     {
-        $listeners = $this->configDump->event;
+        $listeners = $this->config['event'];
 
         foreach($listeners as $name => $listener) {
+            $listener = '\\' . $listener;
             $this->eventManager->attach($name, new $listener);
         }
 
         return;
+    }
+
+    protected function setupErrorHandler()
+    {
+        $di = $this->getDI();
+
+        $this->getDI()->set('error_handler', function() use($di) {
+            return new \Orbit\Machine\HandleException($di);
+        }, false);
+
+        return $this;
     }
 
     /**
@@ -191,13 +174,22 @@ class Bootstrap implements InjectionAwareInterface, EventsAwareInterface
         $this->registerAutoload();
         $this->registerService();
         $this->registerEvents();
+        $this->setupErrorHandler();
+        
     }
 
     public function run($uri = null)
     {
         $this->start();
 
+        if($this->config['app']['debug']) {
+            $this->getDI('error_handler');
+        } 
+
         $app = new \Phalcon\Mvc\Application($this->di);
+        $app->useImplicitView(false);
+        $app->setEventsManager($this->getEventsManager());
+
         return $app->handle($uri);
     }
 
@@ -242,15 +234,5 @@ class Bootstrap implements InjectionAwareInterface, EventsAwareInterface
     public function getConfigDir()
     {
         return $this->configDir;
-    }
-
-    /**
-     * Gets the value of configDump.
-     *
-     * @return \Phalcon\Config
-     */
-    public function getConfigDump()
-    {
-        return $this->configDump;
     }
 }

@@ -89,21 +89,21 @@ abstract class ServiceProvider
      */
     public function getConfig($name = null)
     {
-        return $name ? $this->config->{$name} : $this->config;
+        return $name ? (object)$this->config[$name] : (object)$this->config;
     }
 
     /**
      * Sets the value of config.
      *
-     * @param \Orbit\Machine\Config|PhalconConfig $config the config
+     * @param \Orbit\Machine\Config\Config|PhalconConfig $config the config
      * @return \Orbit\Machine\ServiceProvider
      */
     public function setConfig($config)
     {
-        if($config instanceof PhalconConfig) {
+        if($config instanceof  \Orbit\Machine\Config\Config) {
             $this->config = $config;
         } else {
-            $this->config = $config->dump();
+            $this->config = $config->getPhalconConfig();
         }
 
         return $this;

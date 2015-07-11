@@ -11,6 +11,7 @@ class LogServiceProvider extends ServiceProvider
 
     public function register()
     {
-        return new \Phalcon\Logger\Adapter\File($this->getConfig()->app->log);
+    	$config = $this->getConfig('app')->log;
+        return new \Phalcon\Logger\Adapter\File($config);
     }
 }
