@@ -11,9 +11,9 @@ class CryptServiceProvider extends ServiceProvider
 
     public function register()
     {
-        $crypt = new \Orbit\Machine\Encryption\Encrypter($this->getConfig()->app->key);
-        $crypt->setCipher($this->getConfig()->app->cipher);
-        $crypt->setMode($this->getConfig()->app->cipher_mode);
+        $crypt = new \Orbit\Machine\Encryption\Encrypter($this->getConfig('app')->key);
+        $crypt->setCipher($this->getConfig('app')->cipher);
+        $crypt->setMode($this->getConfig('app')->cipher_mode);
 
         return $crypt;
     }

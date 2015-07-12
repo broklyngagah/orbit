@@ -187,8 +187,8 @@ class Bootstrap implements InjectionAwareInterface, EventsAwareInterface
         } 
 
         $app = new \Phalcon\Mvc\Application($this->di);
-        $app->useImplicitView(false);
-        $app->setEventsManager($this->getEventsManager());
+        $app->useImplicitView('null' === $this->config['view']['default'] ? false : true);
+        //$app->setEventsManager($this->getEventsManager());
 
         return $app->handle($uri);
     }

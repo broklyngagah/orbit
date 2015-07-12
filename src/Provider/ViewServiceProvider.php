@@ -15,7 +15,7 @@ class ViewServiceProvider extends ServiceProvider
     public function register()
     {
         $config = $this->getConfig('view');
-
+        
         $view = new PhalconView;
 
         // if no engine setted or default == 'null' then 
@@ -44,7 +44,7 @@ class ViewServiceProvider extends ServiceProvider
             '.twig' => function ($view, $di) use($config) {
 
                 $twigOptions = [
-                    'cache' => $config->engine->twig->cache,
+                    'cache' => $config->engine['twig']['cache'],
                     'debug' => $this->getConfig('app')->debug,
                     'auto_reload' => $this->getConfig('app')->debug,
                     'optimizations' => 0,

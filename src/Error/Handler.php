@@ -24,6 +24,10 @@ class Handler
 		$this->response = $di->get('response');
 
 		$this->debug = $debug;
+
+        if(! $debug) {
+            ini_set('display_errors', 'Off');
+        }
 	}
 
 	public function report(Exception $e)
