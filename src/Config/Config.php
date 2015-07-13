@@ -15,6 +15,7 @@ use ArrayAccess;
 use Orbit\Machine\Support\Filesystem;
 use Orbit\Machine\Support\FileNotFoundException;
 use Phalcon\Config as PhalconConfig;
+use Orbit\Machine\Support\Arr;
 
 /**
  * Config Class Container
@@ -30,7 +31,7 @@ class Config implements ArrayAccess, ConfigInterface
 
     /**
      * Config array format.
-     * 
+     *
      * @var array $configs
      */
     protected $configs = [];
@@ -40,15 +41,20 @@ class Config implements ArrayAccess, ConfigInterface
         $this->files = new Filesystem;
 
         $this->setBasePath($basePath);
-        
+
         $this->setDirectory($basePath . '/resources/configs');
-        
+
         $this->setupConfig($compiled);
+    }
+
+    public function getConfig($key = null)
+    {
+        return is_null($key) ? $this->configs : $this->configs[$key];
     }
 
     /**
      * Setup config to try to set the configs property.
-     * 
+     *
      * @param  string $compiledFile
      * @return array
      */
@@ -61,6 +67,36 @@ class Config implements ArrayAccess, ConfigInterface
         }
 
         return $this;
+    }
+
+    public function set($key, $value)
+    {
+        return Arr::set($this->configs, $key, $value);
+
+        return $this;
+    }
+
+    public function get($key)
+    {
+        return Arr::get($this->configs, $key);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function add($key, $value)
+    {
+        Arr::add($this->configs, $key, $value);
+
+        return $this;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function has($key)
+    {
+        return Arr::has($this->configs, $key);
     }
 
     /**
@@ -106,7 +142,7 @@ class Config implements ArrayAccess, ConfigInterface
     /**
      * @inheritdoc
      */
-    public function offsetSet($offset, $value) 
+    public function offsetSet($offset, $value)
     {
         if (is_null($offset)) {
             $this->configs[] = $value;
@@ -118,7 +154,7 @@ class Config implements ArrayAccess, ConfigInterface
     /**
      * @inheritdoc
      */
-    public function offsetExists($offset) 
+    public function offsetExists($offset)
     {
         return isset($this->configs[$offset]);
     }
@@ -126,7 +162,7 @@ class Config implements ArrayAccess, ConfigInterface
     /**
      * @inheritdoc
      */
-    public function offsetUnset($offset) 
+    public function offsetUnset($offset)
     {
         unset($this->configs[$offset]);
     }

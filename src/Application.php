@@ -33,13 +33,12 @@ class Application extends PhalconApp
     /** @var string $basePath */
     protected $basePath;
 
-    public function __construct(Bootstrap $bootstrap, $basePath = null)
+    public function __construct(Bootstrap $bootstrap)
     {
         parent::__construct($bootstrap->getDI());
 
         $this->bootstrap = $bootstrap;
-        $this->config = $bootstrap->getConfigDump();
-        $this->setBasePath($basePath);
+        $this->config = $bootstrap->getConfig();
     }
 
     public function run($uri = '')
@@ -47,10 +46,11 @@ class Application extends PhalconApp
         $this->bootstrap->registerAutoload();
 
         $this->bootstrap->registerService();
+        if($this->getConfig()['app']['debug']) {
+            $this->getDI('error_handler');
+        }
 
-        //$this->setupAuth();
-
-        $this->setupEventManager();
+        //$this->setupEventManager();
 
         return $this->handle($uri)->getContent();
     }
@@ -93,44 +93,5 @@ class Application extends PhalconApp
     public function getConfig()
     {
         return $this->config;
-    }
-
-    /**
-     * Set the base path of application and inject to DI service container.
-     *
-     * @param string $basePath
-     *
-     * @return mixed
-     */
-    public function setBasePath($basePath)
-    {
-        if(is_null($basePath)) return $this;
-
-        $this->bootstrap->di->setShared('basePath', function () use ($basePath) {
-            return $basePath;
-        });
-
-        return $this;
-    }
-
-    public function setupAuth()
-    {
-        $eventsManager = $this->bootstrap->di->get('eventsManager');
-        $eventsManager->attach('dispatch:beforeDispatch', new AuthComponent, 50);
-
-        $dispatcher = $this->bootstrap->di->get('dispatcher');
-        $dispatcher->setEventsManager($eventsManager);
-
-        return $this;
-    }
-
-    /**
-     * Get base path.
-     *
-     * @return string
-     */
-    public function getBasePath()
-    {
-        return $this->basePath;
     }
 }

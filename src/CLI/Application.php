@@ -30,12 +30,19 @@ class Application extends ConsoleApplication
      */
     protected $bootstrap;
 
+    /**
+     * @var Orbit\Machine\Config\Config
+     */
+    protected $config;
+
 
     public function __construct(\Orbit\Machine\Bootstrap $bootstrap, $basePath)
     {
         parent::__construct();
 
         $this->bootstrap = $bootstrap;
+
+        $this->config = $bootstrap->getConfig();
 
         // setup base path
         $this->setBasePath($basePath);
@@ -100,8 +107,7 @@ class Application extends ConsoleApplication
         $this->bootstrap->registerService();
 
         $this->setupEventManager();
-
-        $this->commands = $this->di['config']->command->toArray();
+        $this->commands = $this->config['command'];
 
         foreach ($this->commands as $command) {
             if(class_exists($command)) {

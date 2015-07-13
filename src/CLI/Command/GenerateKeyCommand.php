@@ -14,7 +14,7 @@ class GenerateKeyCommand extends Command
 
     public function fire()
     {
-        $defaultKey = di('config')->app->key;
+        $defaultKey = di('config')->get('app.key');
 
         $key = Str::random(32);
 
@@ -26,7 +26,7 @@ class GenerateKeyCommand extends Command
             ));
 
             // set the new application key to config service.
-            di('config')->app->key = $key;
+            di('config')->set('app.key', $key);
         }
 
         $this->callOptimize();

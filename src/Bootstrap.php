@@ -25,7 +25,7 @@ use Symfony\Component\Debug\DebugClassLoader;
  * Class Bootstrap
  * @author Pieter Lelaona <broklyn.gagah@gmail.com>
  */
-class Bootstrap implements InjectionAwareInterface, EventsAwareInterface
+class Bootstrap
 {
     /**
      * Load the injectable trait.
@@ -81,7 +81,7 @@ class Bootstrap implements InjectionAwareInterface, EventsAwareInterface
 
         $this->configDir = $config->getDirectory();
 
-        $this->setEventsManager(new EventManager);
+        //$this->setEventsManager(new EventManager);
     }
 
     /**
@@ -118,22 +118,12 @@ class Bootstrap implements InjectionAwareInterface, EventsAwareInterface
     public function registerAutoload()
     {
         $config = $this->config['loader']['namespaces'];
-        
+
         $loader = new Loader;
         $loader->registerNamespaces($config)
                ->register();
 
         return;
-    }
-
-    /**
-     * Get base path.
-     *
-     * @return string
-     */
-    public function getBasePath()
-    {
-        return $this->config['base_path'];
     }
 
     /**
@@ -153,7 +143,11 @@ class Bootstrap implements InjectionAwareInterface, EventsAwareInterface
         return;
     }
 
-    protected function setupErrorHandler()
+    /**
+     * Setup error handler for this application
+     * @return self
+     */
+    public function setupErrorHandler()
     {
         $di = $this->getDI();
 
@@ -165,32 +159,55 @@ class Bootstrap implements InjectionAwareInterface, EventsAwareInterface
     }
 
     /**
+     * Get base path.
+     *
+     * @return string
+     */
+    public function getBasePath()
+    {
+        return $this->config['base_path'];
+    }
+
+    /**
      * Boot all registered loaders and services.
      *
      * @return mixed
      */
-    protected function start()
+    protected function boot()
     {
         $this->registerAutoload();
         $this->registerService();
-        $this->registerEvents();
         $this->setupErrorHandler();
-        
     }
 
-    public function run($uri = null)
+    public function run($uri = '')
     {
-        $this->start();
+        $this->boot();
 
-        if($this->config['app']['debug']) {
+        if($this->getConfig()['app']['debug']) {
             $this->getDI('error_handler');
-        } 
+        }
 
+        return $this->applicationSetup($uri);
+    }
+
+    protected function applicationSetup($uri = null)
+    {
         $app = new \Phalcon\Mvc\Application($this->di);
         $app->useImplicitView('null' === $this->config['view']['default'] ? false : true);
-        //$app->setEventsManager($this->getEventsManager());
 
-        return $app->handle($uri);
+        // set event manager for application
+        $eventManager = $app->getDI()->getShared('eventsManager');
+
+        $this->setEventsManager($eventManager);
+        $this->registerEvents();
+
+        /*
+         * TODO This is bug on phalcon 2.0.4
+         */
+        $app->setEventsManager($this->getEventsManager());
+
+        return $app->handle($uri)->getContent();
     }
 
     /**

@@ -48,7 +48,7 @@ class OptimizeCommand extends Command
 
     private function optimizeServices()
     {
-        $services = $this->getDI('config')->app->services;
+        $services = di('config')->get('app.services');
         $dump = "<?php \n\n";
         $dump .= '$di = new \\Phalcon\DI\\FactoryDefault();' . "\n";
 
@@ -109,7 +109,7 @@ class OptimizeCommand extends Command
     private function optimizeConfigs()
     {
         $path = $this->basePath . '/storages/apps/config.php';
-        $configs = Arr::except(di('config')->toArray(), ['router']);
+        $configs = Arr::except(di('config')->getConfig(), ['router']);
 
         $basePath = $this->basePath;
 

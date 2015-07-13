@@ -25,7 +25,7 @@ class CacheClearCommand extends Command
     protected function fire()
     {
         $file = new Filesystem;
-        $path = di('config')->cache->file->path;
+        $path = di('config')->get('cache.file.path');
 
         if(! $file->isWritable($path)) {
             $this->showError('Cache folder is not writeable.');
@@ -43,6 +43,11 @@ class CacheClearCommand extends Command
         if($this->option('logs')) {
             $this->clearLogs($file);
         }
+
+        // logs clear
+        if($this->option('logs')) {
+            $this->clearApps($file);
+        }
     }
 
 
@@ -57,15 +62,31 @@ class CacheClearCommand extends Command
 
         $file->deleteDirectory($path, true);
         $file->put($path . '/.gitignore', "* \n!.gitignore");
-    
+
         $this->showInfo('Logs cleared.');
+    }
+
+    private function clearApps(Filesystem $file)
+    {
+        $path = base_path('storages/apps');
+
+        if(! $file->isWritable($path)) {
+            $this->showError('Apps folder isn\'t writeable.');
+            exit;
+        }
+
+        $file->deleteDirectory($path, true);
+        $file->put($path . '/.gitignore', "* \n!.gitignore");
+
+        $this->showInfo('Compiled apps cleared.');
     }
 
 
     protected function getOptions()
     {
         return [
-            ['logs', '-l', InputOption::VALUE_NONE, 'Clear logs file too.'],
+            ['logs', '-l', InputOption::VALUE_NONE, 'Clear log files in [logs] directory too.'],
+            ['apps', '-a', InputOption::VALUE_NONE, 'Clear compiled files in [apps] directory too.'],
         ];
     }
 }
