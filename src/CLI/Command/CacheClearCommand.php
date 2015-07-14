@@ -45,7 +45,7 @@ class CacheClearCommand extends Command
         }
 
         // logs clear
-        if($this->option('logs')) {
+        if($this->option('apps')) {
             $this->clearApps($file);
         }
     }
