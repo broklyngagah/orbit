@@ -13,8 +13,7 @@
         "symfony/console": "~2.7",
         "symfony/finder": "~2.7",
         "symfony/debug": "~2.7",
-        "swiftmailer/swiftmailer": "5.*",
-        "vlucas/phpdotenv": "dev-master"
+        "swiftmailer/swiftmailer": "5.*"
     },
     "require-dev": {
         "phpunit/phpunit": "~4.0",
