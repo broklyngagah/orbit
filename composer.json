@@ -12,12 +12,13 @@
         "twig/twig": "1.*",
         "symfony/console": "~2.7",
         "symfony/finder": "~2.7",
+        "symfony/debug": "~2.7",
         "swiftmailer/swiftmailer": "5.*",
         "vlucas/phpdotenv": "dev-master"
     },
     "require-dev": {
         "phpunit/phpunit": "~4.0",
-        "tracy/tracy": "~2.3"
+        "mockery/mockery": "dev-master"
     },
     "minimum-stability": "dev",
     "autoload": {
