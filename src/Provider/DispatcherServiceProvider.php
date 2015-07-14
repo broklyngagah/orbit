@@ -15,7 +15,8 @@ class DispatcherServiceProvider extends ServiceProvider
 
     public function register()
     {
-        $app = $this->getConfig('loader')->default_namespace;
+
+        $app = $this->getConfig('loader.default_namespace');
         $namespace = sprintf("%s\%s", $app, self::CONTROLLER_NS);
 
         $dispatcher = new MvcDispatcher();

@@ -13,7 +13,7 @@ class UrlServiceProvider extends ServiceProvider
     public function register()
     {
         $url = new Url;
-        $url->setBaseUri($this->getConfig('app')->url);
+        $url->setBaseUri($this->getConfig('app.url'));
 
         return $url;
     }

@@ -14,24 +14,26 @@ class ViewServiceProvider extends ServiceProvider
 
     public function register()
     {
-        $config = $this->getConfig('view');
-        
         $view = new PhalconView;
 
-        // if no engine setted or default == 'null' then 
+        $config = $this->getConfig('view');
+
+        $configDefault = $this->getConfig('view.default');
+
+        // if no engine setted or default == 'null' then
         // set no render level of view
-        if('null' == $config->default) {
+        if('null' == $configDefault) {
             $view::LEVEL_NO_RENDER;
 
             return $view;
         }
 
-        $view->setViewsDir($config->path);
+        $view->setViewsDir($this->getConfig('view.path'));
         $view->setRenderLevel(PhalconView::LEVEL_LAYOUT);
 
         $di = $this->getDI();
 
-        $default = 'register'.ucfirst($config->default);
+        $default = 'register'.ucfirst($configDefault);
 
         $this->{$default}($view, $di, $config);
 
@@ -44,9 +46,9 @@ class ViewServiceProvider extends ServiceProvider
             '.twig' => function ($view, $di) use($config) {
 
                 $twigOptions = [
-                    'cache' => $config->engine['twig']['cache'],
-                    'debug' => $this->getConfig('app')->debug,
-                    'auto_reload' => $this->getConfig('app')->debug,
+                    'cache' => $config['engine']['twig']['cache'],
+                    'debug' => $this->getConfig('app.debug'),
+                    'auto_reload' => $this->getConfig('app.debug'),
                     'optimizations' => 0,
                 ];
 
@@ -82,7 +84,7 @@ class ViewServiceProvider extends ServiceProvider
 
                     $options = [
                         'compileAlways' => $this->getConfig('app')->debug,
-                        'compiledPath' => $config->engine->volt->cache,
+                        'compiledPath' => $config['engine']['volt']['cache'],
                         'compiledSeparator' => '_',
                     ];
 

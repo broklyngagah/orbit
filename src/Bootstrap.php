@@ -80,8 +80,6 @@ class Bootstrap
         $this->config = $config;
 
         $this->configDir = $config->getDirectory();
-
-        //$this->setEventsManager(new EventManager);
     }
 
     /**
@@ -99,7 +97,7 @@ class Bootstrap
 
         $serviceList = $config['app']['services'];
 
-        $di = $this->di;
+        $di = $this->getDI();
 
         foreach($serviceList as $name => $service) {
             $this->di->setShared($name, function () use ($service, $di, $config) {
@@ -107,7 +105,7 @@ class Bootstrap
             });
         }
 
-        return;
+        return $this;
     }
 
     /**
@@ -153,7 +151,7 @@ class Bootstrap
 
         $this->getDI()->set('error_handler', function() use($di) {
             return new \Orbit\Machine\HandleException($di);
-        }, false);
+        }, true);
 
         return $this;
     }

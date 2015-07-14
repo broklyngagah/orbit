@@ -49,7 +49,7 @@ class Config implements ArrayAccess, ConfigInterface
 
     public function getConfig($key = null)
     {
-        return is_null($key) ? $this->configs : $this->configs[$key];
+        return is_null($key) ? $this->configs : $this->get($key);
     }
 
     /**
