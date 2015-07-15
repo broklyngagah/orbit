@@ -22,6 +22,8 @@ class Application extends ConsoleApplication
      */
     const VERSION = '1.0.0-beta';
 
+    protected $commands = [];
+
     /**
      * @var \Phalcon\DiInterface $di
      */
