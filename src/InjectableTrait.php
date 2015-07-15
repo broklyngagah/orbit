@@ -20,6 +20,12 @@ trait InjectableTrait
 
     public $di;
 
+    /**
+     * Set DI
+     *
+     * @param \Phalcon\DiInterface $di
+     * @return $this
+     */
     public function setDI(\Phalcon\DiInterface $di)
     {
         $this->di = $di;
@@ -27,6 +33,12 @@ trait InjectableTrait
         return $this;
     }
 
+    /**
+     * Get DI.
+     *
+     * @param null|string $name
+     * @return mixed
+     */
     public function getDI($name = null)
     {
         return is_null($name) ? $this->di : $this->di->get($name);

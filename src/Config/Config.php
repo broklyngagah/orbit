@@ -57,7 +57,7 @@ class Config implements ArrayAccess, ConfigInterface
      * @param  string $compiledFile
      * @return array
      */
-    protected function setupConfig($compiledFile = null)
+    public function setupConfig($compiledFile = null)
     {
         if(!is_null($compiledFile) && $this->files->isFile($compiledFile)) {
             $this->configs = $this->files->getRequire($compiledFile);
@@ -68,6 +68,13 @@ class Config implements ArrayAccess, ConfigInterface
         return $this;
     }
 
+    /**
+     * Set value of existing config key.
+     *
+     * @param mixed|string $key
+     * @param $value
+     * @return $this
+     */
     public function set($key, $value)
     {
         Arr::set($this->configs, $key, $value);
@@ -95,7 +102,7 @@ class Config implements ArrayAccess, ConfigInterface
      */
     public function has($key)
     {
-        return Arr::has($this->configs, $key);
+        return isset($this->configs['$key']);
     }
 
     /**
@@ -181,7 +188,7 @@ class Config implements ArrayAccess, ConfigInterface
      */
     public function getBasePath()
     {
-        return $this['base_path'];
+        return $this->configs['base_path'];
     }
 
     /**
@@ -193,8 +200,6 @@ class Config implements ArrayAccess, ConfigInterface
      */
     public function setBasePath($basePath)
     {
-        $this['base_path'] = $basePath;
-
-        return $this;
+        return $this->set('base_path', $basePath);
     }
 }

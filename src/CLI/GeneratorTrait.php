@@ -19,8 +19,6 @@ trait GeneratorTrait
 
     protected function replaceClass($name, $stub)
     {
-        $name = $name;
-
         return str_replace('{{class}}', $name, $stub);
     }
 

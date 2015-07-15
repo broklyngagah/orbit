@@ -11,6 +11,7 @@
 
 namespace Orbit\Machine;
 
+use Orbit\Machine\Config\Config;
 use Orbit\Machine\InjectableTrait;
 use Phalcon\Config as PhalconConfig;
 
@@ -95,10 +96,10 @@ abstract class ServiceProvider
     /**
      * Sets the value of config.
      *
-     * @param \Orbit\Machine\Config\Config $config the config
+     * @param Config $config the config
      * @return \Orbit\Machine\ServiceProvider
      */
-    public function setConfig(\Orbit\Machine\Config\Config $config)
+    public function setConfig(Config $config)
     {
         $this->config = $config;
 

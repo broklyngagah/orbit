@@ -68,6 +68,12 @@ class Application extends ConsoleApplication
         return $this->di;
     }
 
+    /**
+     * Add Command into Cli Application.
+     *
+     * @param SymfonyCommand $command
+     * @return SymfonyCommand
+     */
     public function add(SymfonyCommand $command)
     {
         if($command instanceof Command) {
@@ -129,6 +135,11 @@ class Application extends ConsoleApplication
         return $this;
     }
 
+    /**
+     * Setup all events manager that given from skeleton.
+     *
+     * @return $this
+     */
     private function setupEventManager()
     {
         // set new instance of events manager
@@ -143,6 +154,12 @@ class Application extends ConsoleApplication
         return $this;
     }
 
+    /**
+     * Set default base path of skeleton.
+     *
+     * @param $basePath
+     * @return $this
+     */
     public function setBasePath($basePath)
     {
         $this->bootstrap->getDI()->setShared('basePath', function () use ($basePath) {
@@ -153,6 +170,10 @@ class Application extends ConsoleApplication
         return $this;
     }
 
+    /**
+     * Get bootstrap class
+     * @return Bootstrap
+     */
     public function getBootstrap()
     {
         return $this->bootstrap;

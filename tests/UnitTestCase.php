@@ -26,7 +26,6 @@ abstract class UnitTestCase extends \PHPUnit_Framework_TestCase
 
     public function setUp(Phalcon\DiInterface $di = null, Phalcon\Config $config = null)
     {
-
         // Load any additional services that might be required during testing
         $this->di = DI::getDefault();
 

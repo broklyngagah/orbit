@@ -2,6 +2,7 @@
 
 namespace Orbit\Machine\CLI;
 
+use Orbit\Machine\CLI\Application;
 use Symfony\Component\Console\Command\Command as SfCommand;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputInterface;
@@ -18,7 +19,7 @@ class Command extends SfCommand
 
     /**
      * Orbit application console.
-     * @var \Orbit\Machine\CLI\Application
+     * @var Application
      */
     protected $orbit;
 
@@ -79,6 +80,7 @@ class Command extends SfCommand
      * Set Phalcon dependency injection.
      *
      * @param mixed
+     * @return $this
      */
     public function setDI($di)
     {
@@ -138,7 +140,10 @@ class Command extends SfCommand
     /**
      * Call another command silently.
      *
+     * @param $command
+     * @param array $arguments
      * @return \Orbit\CLI\Command
+     * @throws \Exception
      */
     public function callSilent($command, array $arguments = [])
     {
@@ -186,7 +191,7 @@ class Command extends SfCommand
     /**
      * Gets the Orbit application console.
      *
-     * @return \Orbit\Machine\CLI\Application
+     * @return Application
      */
     public function getOrbit()
     {
@@ -196,10 +201,10 @@ class Command extends SfCommand
     /**
      * Sets the Orbit application console.
      *
-     * @param \Orbit\Machine\CLI\Application $orbit the orbit
+     * @param Application $orbit the orbit
      * @return mixed
      */
-    public function setOrbit(\Orbit\Machine\CLI\Application $orbit)
+    public function setOrbit(Application $orbit)
     {
         $this->orbit = $orbit;
 

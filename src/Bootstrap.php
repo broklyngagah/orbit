@@ -180,6 +180,12 @@ class Bootstrap
         return $this->config;
     }
 
+    /**
+     * Setup the phalcon application.
+     *
+     * @param null $uri
+     * @return string
+     */
     protected function applicationSetup($uri = null)
     {
         $app = new Application($this->di);
