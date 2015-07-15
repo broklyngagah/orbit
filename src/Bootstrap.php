@@ -11,15 +11,12 @@
 
 namespace Orbit\Machine;
 
+use Orbit\Machine\Config\Config;
 use Phalcon\DI\FactoryDefault;
 use Phalcon\DiInterface;
-use Phalcon\Events\Manager as EventManager;
+use Phalcon\Events\ManagerInterface;
 use Phalcon\Loader;
-use Phalcon\Di\InjectionAwareInterface;
-use Phalcon\Events\EventsAwareInterface;
-use Orbit\Machine\Config\Config;
-use Symfony\Component\Debug\Debug;
-use Symfony\Component\Debug\DebugClassLoader;
+use Phalcon\Mvc\Application;
 
 /**
  * Class Bootstrap
@@ -65,8 +62,8 @@ class Bootstrap
     protected $services;
 
     /**
-     * @param \Orbit\Machine\Config $config
-     * @param \Phalcon\DiInterface  $di
+     * @param Config $config
+     * @param \Phalcon\DiInterface $di
      */
     public function __construct(Config $config, DiInterface $di = null)
     {
@@ -82,6 +79,56 @@ class Bootstrap
         $this->configDir = $config->getDirectory();
     }
 
+
+    /**
+     * Get base path.
+     *
+     * @return string
+     */
+    public function getBasePath()
+    {
+        return $this->config['base_path'];
+    }
+
+    public function run($uri = '')
+    {
+        $this->boot();
+
+        if($this->getConfig()['app']['debug']) {
+            $this->getDI('error_handler');
+        }
+
+        return $this->applicationSetup($uri);
+    }
+
+    /**
+     * Boot all registered loaders and services.
+     *
+     * @return mixed
+     */
+    protected function boot()
+    {
+        $this->registerAutoload();
+        $this->registerService();
+        $this->setupErrorHandler();
+    }
+
+    /**
+     * Register the autoload.
+     *
+     * @return mixed
+     */
+    public function registerAutoload()
+    {
+        $config = $this->config['loader']['namespaces'];
+
+        $loader = new Loader;
+        $loader->registerNamespaces($config)
+            ->register();
+
+        return;
+    }
+
     /**
      * Register all service to phalcon dependency injection
      *
@@ -89,8 +136,8 @@ class Bootstrap
      */
     public function registerService()
     {
-        if($this->isInjected && ! preg_match('/cli/', php_sapi_name()) ) {
-            return;
+        if($this->isInjected && !preg_match('/cli/', php_sapi_name())) {
+            return $this;
         }
 
         $config = $this->config;
@@ -109,19 +156,61 @@ class Bootstrap
     }
 
     /**
-     * Register the autoload.
+     * Setup error handler for this application
+     * @return self
+     */
+    public function setupErrorHandler()
+    {
+        $di = $this->getDI();
+
+        $this->getDI()->set('error_handler', function () use ($di) {
+            return new HandleException($di);
+        }, true);
+
+        return $this;
+    }
+
+    /**
+     * Gets the value of config.
      *
      * @return mixed
      */
-    public function registerAutoload()
+    public function getConfig()
     {
-        $config = $this->config['loader']['namespaces'];
+        return $this->config;
+    }
 
-        $loader = new Loader;
-        $loader->registerNamespaces($config)
-               ->register();
+    protected function applicationSetup($uri = null)
+    {
+        $app = new Application($this->di);
+        $app->useImplicitView('null' === $this->config['view']['default'] ? false : true);
 
-        return;
+        // set event manager for application
+        $eventManager = $app->getDI()->getShared('eventsManager');
+
+        $this->setEventsManager($eventManager);
+        $this->registerEvents();
+
+        /*
+         * TODO This is bug on phalcon 2.0.4
+         */
+        $app->setEventsManager($this->getEventsManager());
+
+        return $app->handle($uri)->getContent();
+    }
+
+    /**
+     * Set Events Manager for all application.
+     *
+     * @param ManagerInterface $eventsManager
+     * @return $this
+     * @internal param EventManager $manager
+     */
+    public function setEventsManager(ManagerInterface $eventsManager)
+    {
+        $this->eventManager = $eventsManager;
+
+        return $this;
     }
 
     /**
@@ -142,86 +231,6 @@ class Bootstrap
     }
 
     /**
-     * Setup error handler for this application
-     * @return self
-     */
-    public function setupErrorHandler()
-    {
-        $di = $this->getDI();
-
-        $this->getDI()->set('error_handler', function() use($di) {
-            return new \Orbit\Machine\HandleException($di);
-        }, true);
-
-        return $this;
-    }
-
-    /**
-     * Get base path.
-     *
-     * @return string
-     */
-    public function getBasePath()
-    {
-        return $this->config['base_path'];
-    }
-
-    /**
-     * Boot all registered loaders and services.
-     *
-     * @return mixed
-     */
-    protected function boot()
-    {
-        $this->registerAutoload();
-        $this->registerService();
-        $this->setupErrorHandler();
-    }
-
-    public function run($uri = '')
-    {
-        $this->boot();
-
-        if($this->getConfig()['app']['debug']) {
-            $this->getDI('error_handler');
-        }
-
-        return $this->applicationSetup($uri);
-    }
-
-    protected function applicationSetup($uri = null)
-    {
-        $app = new \Phalcon\Mvc\Application($this->di);
-        $app->useImplicitView('null' === $this->config['view']['default'] ? false : true);
-
-        // set event manager for application
-        $eventManager = $app->getDI()->getShared('eventsManager');
-
-        $this->setEventsManager($eventManager);
-        $this->registerEvents();
-
-        /*
-         * TODO This is bug on phalcon 2.0.4
-         */
-        $app->setEventsManager($this->getEventsManager());
-
-        return $app->handle($uri)->getContent();
-    }
-
-    /**
-     * Set Events Manager for all application.
-     *
-     * @param EventManager $manager
-     * @return $this
-     */
-    public function setEventsManager(\Phalcon\Events\ManagerInterface $eventsManager)
-    {
-        $this->eventManager = $eventsManager;
-
-        return $this;
-    }
-
-    /**
      * Gets the value of eventManager.
      *
      * @return mixed
@@ -229,16 +238,6 @@ class Bootstrap
     public function getEventsManager()
     {
         return $this->eventManager;
-    }
-
-    /**
-     * Gets the value of config.
-     *
-     * @return mixed
-     */
-    public function getConfig()
-    {
-        return $this->config;
     }
 
     /**

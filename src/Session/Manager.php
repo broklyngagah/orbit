@@ -31,10 +31,10 @@ class Manager
 
     public function connection($name = null)
     {
-        $name = ! null == $name ?: $this->getDefaultDriver();
+        $name = !null == $name ?: $this->getDefaultDriver();
 
         // if no one connection has not been resolved yet, we will resolve it now.
-        if(! isset($this->connections[$name])) {
+        if(!isset($this->connections[$name])) {
             $this->connections[$name] = $this->resolve($name);
         }
 
@@ -56,7 +56,7 @@ class Manager
     /**
      * Get connector.
      *
-     * @param  string                       $driver
+     * @param  string $driver
      * @thrown InvalidArgumentException
      * @return [type]
      */

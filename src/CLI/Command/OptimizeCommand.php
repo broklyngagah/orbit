@@ -52,9 +52,9 @@ class OptimizeCommand extends Command
         $dump = "<?php \n\n";
         $dump .= '$di = new \\Phalcon\DI\\FactoryDefault();' . "\n";
 
-        foreach ($services as $key => $value) {
+        foreach($services as $key => $value) {
 
-            $dump .= '$di->set(\''. $key .'\', function() use($di, $config) {' . "\n" .
+            $dump .= '$di->set(\'' . $key . '\', function() use($di, $config) {' . "\n" .
                 '    return (new \\' . $value . '($di, $config)' . ")->register();\n });\n\n";
 
             /*$dump .= '$di[\''. $key .'\'] = function() use($di, $config) {' . "\n" .
@@ -65,7 +65,7 @@ class OptimizeCommand extends Command
         $dump .= '$di->set(\'basePath\', function() { ' . "\n" . '    return \'' . base_path() . "'; \n}, true); \n";
 
         $path = $this->basePath . '/storages/apps/services.php';
-        file_put_contents($path, $dump . "\n" . 'return $di;' );
+        file_put_contents($path, $dump . "\n" . 'return $di;');
     }
 
     private function optimizeClassLoader()
@@ -74,10 +74,10 @@ class OptimizeCommand extends Command
 
         $preloader = new ClassPreloader(new PrettyPrinter, new Parser(new Lexer), $this->getTraverser());
         $handle = $preloader->prepareOutput($compiledPath);
-        foreach ($this->getClassFiles() as $file) {
+        foreach($this->getClassFiles() as $file) {
             try {
-                fwrite($handle, $preloader->getCode($file, false)."\n");
-            } catch (SkipFileException $ex) {
+                fwrite($handle, $preloader->getCode($file, false) . "\n");
+            } catch(SkipFileException $ex) {
                 //
             }
         }
@@ -96,7 +96,7 @@ class OptimizeCommand extends Command
     private function getClassFiles()
     {
         $basePath = $this->basePath;
-        $core = require __DIR__.'/../preloader/config.php';
+        $core = require __DIR__ . '/../preloader/config.php';
 
         /*$files = array_merge($core, $this->laravel['config']->get('compile.files', []));
         foreach ($this->laravel['config']->get('compile.providers', []) as $provider) {
@@ -113,12 +113,12 @@ class OptimizeCommand extends Command
 
         $basePath = $this->basePath;
 
-        $dump = var_export($configs , true);
+        $dump = var_export($configs, true);
         $dump = $this->replaceStorageAbsolutePath($dump, $basePath);
         $dump = $this->replaceResourceAbsolutePath($dump, $basePath);
         $dump = $this->replaceAppAbsolutePath($dump, $basePath);
 
-        file_put_contents($path, "<?php \n\n return ".$dump.";\n" );
+        file_put_contents($path, "<?php \n\n return " . $dump . ";\n");
     }
 
     private function replaceStorageAbsolutePath($dump, $basePath)
@@ -127,9 +127,9 @@ class OptimizeCommand extends Command
         preg_match_all("/$regex(.*)/", $dump, $match);
 
         // loop and replace absolute path.
-        for ($i=0; $i < count($match[0]); $i++) {
+        for($i = 0; $i < count($match[0]); $i++) {
 
-            $search = "'".preg_quote($match[0][$i], '/');
+            $search = "'" . preg_quote($match[0][$i], '/');
             $replacer = '__DIR__ . \'/..' . str_replace(',', '', $match[1][$i]) . ',';
 
             $dump = preg_replace("/$search/", $replacer, $dump);
@@ -144,9 +144,9 @@ class OptimizeCommand extends Command
         preg_match_all("/$regex(.*)/", $dump, $match);
 
         // loop and replace absolute path.
-        for ($i=0; $i < count($match[0]); $i++) {
+        for($i = 0; $i < count($match[0]); $i++) {
 
-            $search = "'".preg_quote($match[0][$i], '/');
+            $search = "'" . preg_quote($match[0][$i], '/');
             $replacer = '__DIR__ . \'/../../resources' . str_replace(',', '', $match[1][$i]) . ',';
 
             $dump = preg_replace("/$search/", $replacer, $dump);
@@ -161,9 +161,9 @@ class OptimizeCommand extends Command
         preg_match_all("/$regex(.*)/", $dump, $match);
 
         // loop and replace absolute path.
-        for ($i=0; $i < count($match[0]); $i++) {
+        for($i = 0; $i < count($match[0]); $i++) {
 
-            $search = "'".preg_quote($match[0][$i], '/');
+            $search = "'" . preg_quote($match[0][$i], '/');
             $replacer = '__DIR__ . \'/../../app' . str_replace(',', '', $match[1][$i]) . ',';
 
             $dump = preg_replace("/$search/", $replacer, $dump);

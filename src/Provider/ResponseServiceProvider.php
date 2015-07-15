@@ -22,7 +22,7 @@ class ResponseServiceProvider extends ServiceProvider
     {
         $config = $this->getConfig('session');
 
-        $this->getDI()->setShared('cookies', function() use($config) {
+        $this->getDI()->setShared('cookies', function () use ($config) {
             $cookies = new Cookies;
             $cookies->useEncryption($config->encrypt);
 

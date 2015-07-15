@@ -66,14 +66,12 @@ class Command extends SfCommand
      */
     protected function prepareParameters()
     {
-        foreach ($this->getArguments() as $arguments)
-        {
-            call_user_func_array(array($this, 'addArgument'), $arguments);
+        foreach($this->getArguments() as $arguments) {
+            call_user_func_array([$this, 'addArgument'], $arguments);
         }
 
-        foreach ($this->getOptions() as $options)
-        {
-            call_user_func_array(array($this, 'addOption'), $options);
+        foreach($this->getOptions() as $options) {
+            call_user_func_array([$this, 'addOption'], $options);
         }
     }
 
@@ -92,7 +90,7 @@ class Command extends SfCommand
     /**
      * Get the Phalcon dependency injection instance.
      *
-     * @param  string $name  service name
+     * @param  string $name service name
      * @return \Phalcon\Di|mixed
      */
     public function getDI($name = null)
@@ -110,8 +108,8 @@ class Command extends SfCommand
     /**
      * Run the console command.
      *
-     * @param  \Symfony\Component\Console\Input\InputInterface  $input
-     * @param  \Symfony\Component\Console\Output\OutputInterface  $output
+     * @param  \Symfony\Component\Console\Input\InputInterface $input
+     * @param  \Symfony\Component\Console\Output\OutputInterface $output
      * @return int
      */
     public function run(InputInterface $input, OutputInterface $output)
@@ -142,7 +140,7 @@ class Command extends SfCommand
      *
      * @return \Orbit\CLI\Command
      */
-    public function callSilent($command, array $arguments = array())
+    public function callSilent($command, array $arguments = [])
     {
         $instance = $this->getApplication()->find($command);
 
@@ -215,7 +213,7 @@ class Command extends SfCommand
      */
     protected function getArguments()
     {
-        return array();
+        return [];
     }
 
     /**
@@ -225,18 +223,18 @@ class Command extends SfCommand
      */
     protected function getOptions()
     {
-        return array();
+        return [];
     }
 
     /**
      * Get the value of a command argument.
      *
-     * @param  string  $key
+     * @param  string $key
      * @return string|array
      */
     public function argument($key = null)
     {
-        if (is_null($key)) return $this->input->getArguments();
+        if(is_null($key)) return $this->input->getArguments();
 
         return $this->input->getArgument($key);
     }
@@ -244,12 +242,12 @@ class Command extends SfCommand
     /**
      * Get the value of a command option.
      *
-     * @param  string  $key
+     * @param  string $key
      * @return string|array
      */
     public function option($key = null)
     {
-        if (is_null($key)) return $this->input->getOptions();
+        if(is_null($key)) return $this->input->getOptions();
 
         return $this->input->getOption($key);
     }

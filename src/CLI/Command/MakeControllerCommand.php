@@ -39,7 +39,7 @@ class MakeControllerCommand extends Command
             $files->put($controller, $stub);
 
             $this->showInfo("Controller wiht name [$name] created.");
-        } catch (\Exception $e) {
+        } catch(\Exception $e) {
             $this->showError($e->getMessage());
         }
     }

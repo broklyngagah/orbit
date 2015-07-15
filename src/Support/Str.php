@@ -37,7 +37,7 @@ class Str
      */
     public static function camel($value)
     {
-        if (isset(static::$camelCache[$value])) {
+        if(isset(static::$camelCache[$value])) {
             return static::$camelCache[$value];
         }
 
@@ -47,15 +47,15 @@ class Str
     /**
      * Determine if a given string contains a given substring.
      *
-     * @param  string       $haystack
+     * @param  string $haystack
      * @param  string|array $needles
      *
      * @return bool
      */
     public static function contains($haystack, $needles)
     {
-        foreach ((array)$needles as $needle) {
-            if ($needle != '' && strpos($haystack, $needle) !== false) {
+        foreach((array)$needles as $needle) {
+            if($needle != '' && strpos($haystack, $needle) !== false) {
                 return true;
             }
         }
@@ -66,15 +66,15 @@ class Str
     /**
      * Determine if a given string ends with a given substring.
      *
-     * @param  string       $haystack
+     * @param  string $haystack
      * @param  string|array $needles
      *
      * @return bool
      */
     public static function endsWith($haystack, $needles)
     {
-        foreach ((array)$needles as $needle) {
-            if ((string)$needle === substr($haystack, -strlen($needle))) {
+        foreach((array)$needles as $needle) {
+            if((string)$needle === substr($haystack, -strlen($needle))) {
                 return true;
             }
         }
@@ -107,7 +107,7 @@ class Str
      */
     public static function is($pattern, $value)
     {
-        if ($pattern == $value) {
+        if($pattern == $value) {
             return true;
         }
         $pattern = preg_quote($pattern, '#');
@@ -135,14 +135,14 @@ class Str
      * Limit the number of characters in a string.
      *
      * @param  string $value
-     * @param  int    $limit
+     * @param  int $limit
      * @param  string $end
      *
      * @return string
      */
     public static function limit($value, $limit = 100, $end = '...')
     {
-        if (mb_strlen($value) <= $limit) {
+        if(mb_strlen($value) <= $limit) {
             return $value;
         }
 
@@ -165,7 +165,7 @@ class Str
      * Limit the number of words in a string.
      *
      * @param  string $value
-     * @param  int    $words
+     * @param  int $words
      * @param  string $end
      *
      * @return string
@@ -173,7 +173,7 @@ class Str
     public static function words($value, $words = 100, $end = '...')
     {
         preg_match('/^\s*+(?:\S++\s*+){1,' . $words . '}/u', $value, $matches);
-        if (!isset($matches[0]) || strlen($value) === strlen($matches[0])) {
+        if(!isset($matches[0]) || strlen($value) === strlen($matches[0])) {
             return $value;
         }
 
@@ -197,7 +197,7 @@ class Str
      * Get the plural form of an English word.
      *
      * @param  string $value
-     * @param  int    $count
+     * @param  int $count
      *
      * @return string
      */
@@ -217,11 +217,11 @@ class Str
      */
     public static function random($length = 16)
     {
-        if (!function_exists('openssl_random_pseudo_bytes')) {
+        if(!function_exists('openssl_random_pseudo_bytes')) {
             throw new RuntimeException('OpenSSL extension is required.');
         }
         $bytes = openssl_random_pseudo_bytes($length * 2);
-        if ($bytes === false) {
+        if($bytes === false) {
             throw new RuntimeException('Unable to generate random string.');
         }
 
@@ -313,10 +313,10 @@ class Str
     public static function snake($value, $delimiter = '_')
     {
         $key = $value . $delimiter;
-        if (isset(static::$snakeCache[$key])) {
+        if(isset(static::$snakeCache[$key])) {
             return static::$snakeCache[$key];
         }
-        if (!ctype_lower($value)) {
+        if(!ctype_lower($value)) {
             $value = strtolower(preg_replace('/(.)(?=[A-Z])/', '$1' . $delimiter, $value));
         }
 
@@ -326,15 +326,15 @@ class Str
     /**
      * Determine if a given string starts with a given substring.
      *
-     * @param  string       $haystack
+     * @param  string $haystack
      * @param  string|array $needles
      *
      * @return bool
      */
     public static function startsWith($haystack, $needles)
     {
-        foreach ((array)$needles as $needle) {
-            if ($needle != '' && strpos($haystack, $needle) === 0) {
+        foreach((array)$needles as $needle) {
+            if($needle != '' && strpos($haystack, $needle) === 0) {
                 return true;
             }
         }
@@ -352,7 +352,7 @@ class Str
     public static function studly($value)
     {
         $key = $value;
-        if (isset(static::$studlyCache[$key])) {
+        if(isset(static::$studlyCache[$key])) {
             return static::$studlyCache[$key];
         }
         $value = ucwords(str_replace(['-', '_'], ' ', $value));
@@ -367,29 +367,29 @@ class Str
      * Regardless of the used implementation, it will leak length information.
      *
      * @param string $knownString The string of known length to compare against
-     * @param string $userInput   The string that the user can control
+     * @param string $userInput The string that the user can control
      *
      * @return bool true if the two strings are the same, false otherwise
      */
     public static function equals($knownString, $userInput)
     {
         // Avoid making unnecessary duplications of secret data
-        if (!is_string($knownString)) {
+        if(!is_string($knownString)) {
             $knownString = (string)$knownString;
         }
-        if (!is_string($userInput)) {
+        if(!is_string($userInput)) {
             $userInput = (string)$userInput;
         }
-        if (function_exists('hash_equals')) {
+        if(function_exists('hash_equals')) {
             return hash_equals($knownString, $userInput);
         }
         $knownLen = self::safeStrlen($knownString);
         $userLen = self::safeStrlen($userInput);
-        if ($userLen !== $knownLen) {
+        if($userLen !== $knownLen) {
             return false;
         }
         $result = 0;
-        for ($i = 0; $i < $knownLen; $i++) {
+        for($i = 0; $i < $knownLen; $i++) {
             $result |= (ord($knownString[$i]) ^ ord($userInput[$i]));
         }
 
@@ -409,10 +409,10 @@ class Str
         // Premature optimization
         // Since this cannot be changed at runtime, we can cache it
         static $funcExists = null;
-        if (null === $funcExists) {
+        if(null === $funcExists) {
             $funcExists = function_exists('mb_strlen');
         }
-        if ($funcExists) {
+        if($funcExists) {
             return mb_strlen($string, '8bit');
         }
 

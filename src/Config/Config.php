@@ -13,7 +13,6 @@ namespace Orbit\Machine\Config;
 
 use ArrayAccess;
 use Orbit\Machine\Support\Filesystem;
-use Orbit\Machine\Support\FileNotFoundException;
 use Phalcon\Config as PhalconConfig;
 use Orbit\Machine\Support\Arr;
 
@@ -24,9 +23,9 @@ use Orbit\Machine\Support\Arr;
 class Config implements ArrayAccess, ConfigInterface
 {
 
-	/**
-	 * @var Filesystem
-	 */
+    /**
+     * @var Filesystem
+     */
     protected $files;
 
     /**
@@ -60,10 +59,10 @@ class Config implements ArrayAccess, ConfigInterface
      */
     protected function setupConfig($compiledFile = null)
     {
-        if(! is_null($compiledFile) && $this->files->isFile($compiledFile)) {
+        if(!is_null($compiledFile) && $this->files->isFile($compiledFile)) {
             $this->configs = $this->files->getRequire($compiledFile);
         } else {
-        	$this->configs = $this->build();
+            $this->configs = $this->build();
         }
 
         return $this;
@@ -71,7 +70,7 @@ class Config implements ArrayAccess, ConfigInterface
 
     public function set($key, $value)
     {
-        return Arr::set($this->configs, $key, $value);
+        Arr::set($this->configs, $key, $value);
 
         return $this;
     }
@@ -124,7 +123,7 @@ class Config implements ArrayAccess, ConfigInterface
     {
         $files = $this->files->files($this->getDirectory());
         $configs = [];
-        foreach ($files as $file) {
+        foreach($files as $file) {
             $configs[$this->files->name($file)] = $this->files->getRequire($file);
         }
 
@@ -144,7 +143,7 @@ class Config implements ArrayAccess, ConfigInterface
      */
     public function offsetSet($offset, $value)
     {
-        if (is_null($offset)) {
+        if(is_null($offset)) {
             $this->configs[] = $value;
         } else {
             $this->configs[$offset] = $value;

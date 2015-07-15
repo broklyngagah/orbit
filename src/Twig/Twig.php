@@ -26,13 +26,13 @@ class Twig extends Engine
      * {@inheritdoc}
      *
      * @param \Phalcon\Mvc\ViewInterface $view
-     * @param \Phalcon\DiInterface       $di
-     * @param array                      $options
-     * @param array                      $userFunctions
+     * @param \Phalcon\DiInterface $di
+     * @param array $options
+     * @param array $userFunctions
      */
     public function __construct($view, \Phalcon\DiInterface $di = null, $options = [], $userFunctions = [])
     {
-        $loader     = new \Twig_Loader_Filesystem($view->getViewsDir());
+        $loader = new \Twig_Loader_Filesystem($view->getViewsDir());
         $this->twig = new Environment($di, $loader, $options);
 
         $this->twig->addExtension(new CoreExtension());
@@ -47,8 +47,8 @@ class Twig extends Engine
      * Registers common function in Twig
      *
      * @param \Phalcon\Mvc\ViewInterface $view
-     * @param \Phalcon\DiInterface       $di
-     * @param array                      $userFunctions
+     * @param \Phalcon\DiInterface $di
+     * @param array $userFunctions
      */
     protected function registryFunctions($view, DiInterface $di, $userFunctions = [])
     {
@@ -131,11 +131,11 @@ class Twig extends Engine
             }, $options)
         ];
 
-        if (!empty($userFunctions)) {
+        if(!empty($userFunctions)) {
             $functions = array_merge($functions, $userFunctions);
         }
 
-        foreach ($functions as $function) {
+        foreach($functions as $function) {
             $this->twig->addFunction($function);
         }
     }
@@ -143,25 +143,25 @@ class Twig extends Engine
     /**
      * {@inheritdoc}
      *
-     * @param string  $path
-     * @param array   $params
+     * @param string $path
+     * @param array $params
      * @param boolean $mustClean
      */
     public function render($path, $params, $mustClean = false)
     {
         $view = $this->_view;
-        if (!isset($params['content'])) {
+        if(!isset($params['content'])) {
             $params['content'] = $view->getContent();
         }
 
-        if (!isset($params['view'])) {
+        if(!isset($params['view'])) {
             $params['view'] = $view;
         }
 
         $relativePath = str_replace($view->getViewsDir(), '', $path);
 
         $content = $this->twig->render($relativePath, $params);
-        if ($mustClean) {
+        if($mustClean) {
             $this->_view->setContent($content);
         } else {
             echo $content;

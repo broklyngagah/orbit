@@ -14,7 +14,7 @@ class Auth extends Component
 {
 
     const COOKIE_RMU = 'RMU',
-          COOKIE_RMT = 'RMT';
+        COOKIE_RMT = 'RMT';
 
     protected $model;
 
@@ -39,16 +39,16 @@ class Auth extends Component
      */
     public function check(array $credentials)
     {
-        if(! $this->model instanceof Model)
+        if(!$this->model instanceof Model)
 
-        $user = false;
+            $user = false;
         if(filter_var($credentials['username'], FILTER_VALIDATE_EMAIL)) {
             $user = $this->model->findFirstByEmail($credentials['username']);
         } else {
             $user = $this->model->findFirstByUsername($credentials['username']);
         }
 
-        if( ! $user) {
+        if(!$user) {
             throw new Exception('Username or password doesn\'t match.');
         }
 
@@ -56,7 +56,7 @@ class Auth extends Component
         $this->checkUserFlag($user);
 
         // check password
-        if( ! $this->security->checkHash($credentials['password'], $user->password)) {
+        if(!$this->security->checkHash($credentials['password'], $user->password)) {
             throw new Exception('Username or password doesn\'t match.');
         }
 

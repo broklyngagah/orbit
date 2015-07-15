@@ -18,7 +18,7 @@ class Assets extends \Twig_TokenParser
     /**
      * {@inheritdoc}
      *
-     * @param  \Twig_Token         $token
+     * @param  \Twig_Token $token
      * @return \Twig_NodeInterface
      */
     public function parse(\Twig_Token $token)
@@ -26,13 +26,15 @@ class Assets extends \Twig_TokenParser
         $methodName = $this->parser->getStream()->expect(\Twig_Token::NAME_TYPE)->getValue();
         $arguments = $this->parser->getExpressionParser()->parseArguments();
         $this->parser->getStream()->expect(\Twig_Token::BLOCK_END_TYPE);
+
         return new Node(
-            array('arguments' => $arguments),
-            array('methodName' => $methodName),
+            ['arguments' => $arguments],
+            ['methodName' => $methodName],
             $token->getLine(),
             $this->getTag()
         );
     }
+
     /**
      * {@inheritdoc}
      *

@@ -116,7 +116,7 @@ class Encrypter implements EncryptInterface
     {
         try {
             return mcrypt_decrypt($this->cipher, $this->key, $value, $this->mode, $iv);
-        } catch (Exception $e) {
+        } catch(Exception $e) {
             throw new DecryptException($e->getMessage());
         }
     }
@@ -136,11 +136,11 @@ class Encrypter implements EncryptInterface
         // If the payload is not valid JSON or does not have the proper keys set we will
         // assume it is invalid and bail out of the routine since we will not be able
         // to decrypt the given value. We'll also check the MAC for this encryption.
-        if (!$payload || $this->invalidPayload($payload)) {
+        if(!$payload || $this->invalidPayload($payload)) {
             throw new DecryptException('Invalid data.');
         }
 
-        if (!$this->validMac($payload)) {
+        if(!$this->validMac($payload)) {
             throw new DecryptException('MAC is invalid.');
         }
 
@@ -244,11 +244,11 @@ class Encrypter implements EncryptInterface
      */
     protected function getRandomizer()
     {
-        if (defined('MCRYPT_DEV_URANDOM')) {
+        if(defined('MCRYPT_DEV_URANDOM')) {
             return MCRYPT_DEV_URANDOM;
         }
 
-        if (defined('MCRYPT_DEV_RANDOM')) {
+        if(defined('MCRYPT_DEV_RANDOM')) {
             return MCRYPT_DEV_RANDOM;
         }
 

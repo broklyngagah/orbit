@@ -24,7 +24,7 @@ class FilesConnector implements ConnectorInterface
             'uniqueId' => $id,
         ]);
 
-        if( ! $session->isStarted()) {
+        if(!$session->isStarted()) {
             $session->start();
         }
 

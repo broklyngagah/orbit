@@ -95,7 +95,7 @@ abstract class ServiceProvider
     /**
      * Sets the value of config.
      *
-     * @param \Orbit\Machine\Config\Config  $config the config
+     * @param \Orbit\Machine\Config\Config $config the config
      * @return \Orbit\Machine\ServiceProvider
      */
     public function setConfig(\Orbit\Machine\Config\Config $config)

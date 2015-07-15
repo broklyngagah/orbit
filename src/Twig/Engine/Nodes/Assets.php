@@ -12,14 +12,14 @@ class Assets extends \Twig_Node
     public function compile(\Twig_Compiler $compiler)
     {
         $compiler->addDebugInfo($this)
-                 ->write('$this->env->getDI()->get(\'assets\')->')
-                 ->raw($this->getAttribute('methodName'))
-                 ->write('(');
+            ->write('$this->env->getDI()->get(\'assets\')->')
+            ->raw($this->getAttribute('methodName'))
+            ->write('(');
         $nbArgs = count($this->getNode('arguments'));
         $i = 0;
-        foreach ($this->getNode('arguments') as $argument) {
+        foreach($this->getNode('arguments') as $argument) {
             $compiler->subcompile($argument);
-            if (++$i < $nbArgs) {
+            if(++$i < $nbArgs) {
                 $compiler->raw(', ');
             }
         }

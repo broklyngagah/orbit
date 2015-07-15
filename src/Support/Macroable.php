@@ -17,7 +17,7 @@ trait Macroable
     /**
      * Register a custom macro.
      *
-     * @param  string   $name
+     * @param  string $name
      * @param  callable $macro
      *
      * @return void
@@ -43,7 +43,7 @@ trait Macroable
      * Dynamically handle calls to the class.
      *
      * @param  string $method
-     * @param  array  $parameters
+     * @param  array $parameters
      *
      * @return mixed
      *
@@ -51,8 +51,8 @@ trait Macroable
      */
     public static function __callStatic($method, $parameters)
     {
-        if (static::hasMacro($method)) {
-            if (static::$macros[$method] instanceof Closure) {
+        if(static::hasMacro($method)) {
+            if(static::$macros[$method] instanceof Closure) {
                 return call_user_func_array(Closure::bind(static::$macros[$method], null, get_called_class()), $parameters);
             } else {
                 return call_user_func_array(static::$macros[$method], $parameters);
@@ -65,7 +65,7 @@ trait Macroable
      * Dynamically handle calls to the class.
      *
      * @param  string $method
-     * @param  array  $parameters
+     * @param  array $parameters
      *
      * @return mixed
      *
@@ -73,8 +73,8 @@ trait Macroable
      */
     public function __call($method, $parameters)
     {
-        if (static::hasMacro($method)) {
-            if (static::$macros[$method] instanceof Closure) {
+        if(static::hasMacro($method)) {
+            if(static::$macros[$method] instanceof Closure) {
                 return call_user_func_array(static::$macros[$method]->bindTo($this, get_class($this)), $parameters);
             } else {
                 return call_user_func_array(static::$macros[$method], $parameters);

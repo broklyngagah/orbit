@@ -27,7 +27,7 @@ class SessionServiceProvider extends ServiceProvider
 
     private function registerConnectors($manager)
     {
-        foreach ($this->defaults as $connector) {
+        foreach($this->defaults as $connector) {
             $connector = ucfirst($connector);
             $this->{"register{$connector}Connector"}($manager);
         }

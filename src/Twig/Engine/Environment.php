@@ -12,18 +12,20 @@ class Environment extends \Twig_Environment
      * @var \Phalcon\DiInterface
      */
     protected $di = null;
+
     /**
      * {@inheritdoc}
      *
-     * @param \Phalcon\DiInterface  $di
+     * @param \Phalcon\DiInterface $di
      * @param \Twig_LoaderInterface $loader
-     * @param array                 $options
+     * @param array $options
      */
-    public function __construct(DiInterface $di, \Twig_LoaderInterface $loader = null, $options = array())
+    public function __construct(DiInterface $di, \Twig_LoaderInterface $loader = null, $options = [])
     {
         $this->di = $di;
         parent::__construct($loader, $options);
     }
+
     /**
      * Returns the internal dependency injector.
      *

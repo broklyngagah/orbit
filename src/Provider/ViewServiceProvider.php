@@ -33,7 +33,7 @@ class ViewServiceProvider extends ServiceProvider
 
         $di = $this->getDI();
 
-        $default = 'register'.ucfirst($configDefault);
+        $default = 'register' . ucfirst($configDefault);
 
         $this->{$default}($view, $di, $config);
 
@@ -43,7 +43,7 @@ class ViewServiceProvider extends ServiceProvider
     private function registerTwig(&$view, $di, $config)
     {
         $view->registerEngines([
-            '.twig' => function ($view, $di) use($config) {
+            '.twig' => function ($view, $di) use ($config) {
 
                 $twigOptions = [
                     'cache' => $config['engine']['twig']['cache'],
@@ -78,25 +78,25 @@ class ViewServiceProvider extends ServiceProvider
     private function registerVolt(&$view, $di, $config)
     {
         $view->registerEngines([
-                ".volt" => function ($view, $di) use ($config) {
+            ".volt" => function ($view, $di) use ($config) {
 
-                    $volt = new VoltEngine($view, $di);
+                $volt = new VoltEngine($view, $di);
 
-                    $options = [
-                        'compileAlways' => $this->getConfig('app')->debug,
-                        'compiledPath' => $config['engine']['volt']['cache'],
-                        'compiledSeparator' => '_',
-                    ];
+                $options = [
+                    'compileAlways' => $this->getConfig('app')->debug,
+                    'compiledPath' => $config['engine']['volt']['cache'],
+                    'compiledSeparator' => '_',
+                ];
 
-                    $volt->setOptions($options);
+                $volt->setOptions($options);
 
-                    $compiler = $volt->getCompiler();
+                $compiler = $volt->getCompiler();
 
-                    return $volt;
-                }
-            ]);
+                return $volt;
+            }
+        ]);
 
-            return;
+        return;
     }
 
 }

@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace Orbit\Machine;
 
@@ -9,25 +9,25 @@ use Symfony\Component\Debug\Exception\FatalErrorException;
 class HandleException
 {
 
-	protected $di;
+    protected $di;
 
-	public function __construct($di)
-	{
-
-		$this->di = $di;
-
-		error_reporting(-1);
-
-		set_error_handler([$this, 'handleError']);
-
-		set_exception_handler([$this, 'handleException']);
-
-		register_shutdown_function([$this, 'handleShutdown']);
-	}
-
-	public function handleError($level, $message, $file = '', $line = 0, $context = [])
+    public function __construct($di)
     {
-        if (error_reporting() & $level) {
+
+        $this->di = $di;
+
+        error_reporting(-1);
+
+        set_error_handler([$this, 'handleError']);
+
+        set_exception_handler([$this, 'handleException']);
+
+        register_shutdown_function([$this, 'handleShutdown']);
+    }
+
+    public function handleError($level, $message, $file = '', $line = 0, $context = [])
+    {
+        if(error_reporting() & $level) {
             throw new ErrorException($message, 0, $level, $file, $line);
         }
     }
@@ -35,7 +35,7 @@ class HandleException
     public function handleException($e)
     {
         $this->getExceptionHandler()->report($e);
-        if (preg_match('/cli/', php_sapi_name())) {
+        if(preg_match('/cli/', php_sapi_name())) {
             $this->renderForConsole($e);
         } else {
             $this->renderHttpResponse($e);
@@ -54,7 +54,7 @@ class HandleException
 
     public function handleShutdown()
     {
-        if (!is_null($error = error_get_last()) && $this->isFatal($error['type'])) {
+        if(!is_null($error = error_get_last()) && $this->isFatal($error['type'])) {
             $this->handleException($this->fatalExceptionFromError($error, 0));
         }
     }

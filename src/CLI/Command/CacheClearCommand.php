@@ -27,12 +27,12 @@ class CacheClearCommand extends Command
         $file = new Filesystem;
         $path = di('config')->get('cache.file.path');
 
-        if(! $file->isWritable($path)) {
+        if(!$file->isWritable($path)) {
             $this->showError('Cache folder is not writeable.');
             exit;
         }
 
-        foreach ($this->directories as $dir) {
+        foreach($this->directories as $dir) {
             $file->deleteDirectory($path . $dir, true);
             $file->put($path . $dir . '/.gitignore', "* \n!.gitignore");
         }
@@ -55,7 +55,7 @@ class CacheClearCommand extends Command
     {
         $path = base_path('storages/logs');
 
-        if(! $file->isWritable($path)) {
+        if(!$file->isWritable($path)) {
             $this->showError('Logs folder isn\'t writeable.');
             exit;
         }
@@ -70,7 +70,7 @@ class CacheClearCommand extends Command
     {
         $path = base_path('storages/apps');
 
-        if(! $file->isWritable($path)) {
+        if(!$file->isWritable($path)) {
             $this->showError('Apps folder isn\'t writeable.');
             exit;
         }

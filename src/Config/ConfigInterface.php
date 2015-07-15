@@ -9,7 +9,7 @@ use Phalcon\Config as PhalconConfig;
  */
 interface ConfigInterface
 {
-	/**
+    /**
      * Set config path directory.
      *
      * @param string $path
@@ -66,7 +66,7 @@ interface ConfigInterface
     /**
      * Check is the key is setted in collection.
      *
-     * @param  string|mixed  $key
+     * @param  string|mixed $key
      * @return boolean
      */
     public function has($key);

@@ -25,7 +25,7 @@ final class SecureRandom
      * Be aware that a guessable seed will severely compromise the PRNG
      * algorithm that is employed.
      *
-     * @param string          $seedFile
+     * @param string $seedFile
      * @param LoggerInterface $logger
      */
     public function __construct($seedFile = null, LoggerInterface $logger = null)
@@ -33,8 +33,8 @@ final class SecureRandom
         $this->seedFile = $seedFile;
         $this->logger = $logger;
         // determine whether to use OpenSSL
-        if (!function_exists('openssl_random_pseudo_bytes')) {
-            if (null !== $this->logger) {
+        if(!function_exists('openssl_random_pseudo_bytes')) {
+            if(null !== $this->logger) {
                 $this->logger->notice('It is recommended that you enable the "openssl" extension for random number generation.');
             }
             $this->useOpenSsl = false;
@@ -49,21 +49,21 @@ final class SecureRandom
     public function nextBytes($nbBytes)
     {
         // try OpenSSL
-        if ($this->useOpenSsl) {
+        if($this->useOpenSsl) {
             $bytes = openssl_random_pseudo_bytes($nbBytes, $strong);
-            if (false !== $bytes && true === $strong) {
+            if(false !== $bytes && true === $strong) {
                 return $bytes;
             }
-            if (null !== $this->logger) {
+            if(null !== $this->logger) {
                 $this->logger->info('OpenSSL did not produce a secure random number.');
             }
         }
         // initialize seed
-        if (null === $this->seed) {
-            if (null === $this->seedFile) {
+        if(null === $this->seed) {
+            if(null === $this->seedFile) {
                 throw new \RuntimeException('You need to specify a file path to store the seed.');
             }
-            if (is_file($this->seedFile)) {
+            if(is_file($this->seedFile)) {
                 list($this->seed, $this->seedLastUpdatedAt) = $this->readSeed();
             } else {
                 $this->seed = uniqid(mt_rand(), true);
@@ -71,7 +71,7 @@ final class SecureRandom
             }
         }
         $bytes = '';
-        while (strlen($bytes) < $nbBytes) {
+        while(strlen($bytes) < $nbBytes) {
             static $incr = 1;
             $bytes .= hash('sha512', $incr++ . $this->seed . uniqid(mt_rand(), true) . $nbBytes, true);
             $this->seed = base64_encode(hash('sha512', $this->seed . $bytes . $nbBytes, true));
@@ -88,7 +88,7 @@ final class SecureRandom
 
     private function updateSeed()
     {
-        if (!$this->seedUpdated && $this->seedLastUpdatedAt < time() - mt_rand(1, 10)) {
+        if(!$this->seedUpdated && $this->seedLastUpdatedAt < time() - mt_rand(1, 10)) {
             file_put_contents($this->seedFile, json_encode([$this->seed, microtime(true)]));
         }
         $this->seedUpdated = true;

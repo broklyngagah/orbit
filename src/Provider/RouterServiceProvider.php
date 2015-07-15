@@ -29,7 +29,7 @@ class RouterServiceProvider extends ServiceProvider
 
         $controllers = $files->files($path);
         //dump($controllers); die;
-        foreach ($controllers as $ctrl) {
+        foreach($controllers as $ctrl) {
 
             preg_match('/app\/Controller\/(.*)(Controller)\.php/', $ctrl, $match);
 

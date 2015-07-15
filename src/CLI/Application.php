@@ -2,10 +2,12 @@
 
 namespace Orbit\Machine\CLI;
 
+use Orbit\Machine\Bootstrap;
 use Orbit\Machine\CLI\Command;
 use Symfony\Component\Console\Application as ConsoleApplication;
 use Symfony\Component\Console\Command\Command as SymfonyCommand;
 use Symfony\Component\Console\Output\BufferedOutput;
+use Orbit\Machine\Config\Config;
 
 /**
  * Class Console Application
@@ -26,17 +28,17 @@ class Application extends ConsoleApplication
     protected $di;
 
     /**
-     * @var \Orbit\Machine\Bootstrap $bootstrap
+     * @var Bootstrap $bootstrap
      */
     protected $bootstrap;
 
     /**
-     * @var Orbit\Machine\Config\Config
+     * @var Config
      */
     protected $config;
 
 
-    public function __construct(\Orbit\Machine\Bootstrap $bootstrap, $basePath)
+    public function __construct(Bootstrap $bootstrap, $basePath)
     {
         parent::__construct();
 
@@ -66,8 +68,7 @@ class Application extends ConsoleApplication
 
     public function add(SymfonyCommand $command)
     {
-        if ($command instanceof Command)
-        {
+        if($command instanceof Command) {
             $command->setDI($this->di);
             $command->setOrbit($this);
         }
@@ -78,7 +79,7 @@ class Application extends ConsoleApplication
     /**
      * Add the command to the parent instance.
      *
-     * @param  \Symfony\Component\Console\Command\Command  $command
+     * @param  \Symfony\Component\Console\Command\Command $command
      * @return \Symfony\Component\Console\Command\Command
      */
     protected function addToParent(SymfonyCommand $command)
@@ -86,9 +87,17 @@ class Application extends ConsoleApplication
         return parent::add($command);
     }
 
+    /**
+     * Reoslve command
+     *
+     * @param string|mixed $command
+     * @return SymfonyCommand
+     */
     public function resolve($command)
     {
         $console = new \ReflectionClass($command);
+
+        /** @var SymfonyCommand $command */
         $command = $console->newInstance($this->di);
 
         return $this->add($command);
@@ -109,7 +118,7 @@ class Application extends ConsoleApplication
         $this->setupEventManager();
         $this->commands = $this->config['command'];
 
-        foreach ($this->commands as $command) {
+        foreach($this->commands as $command) {
             if(class_exists($command)) {
                 $this->resolve($command);
             }
@@ -134,7 +143,7 @@ class Application extends ConsoleApplication
 
     public function setBasePath($basePath)
     {
-        $this->bootstrap->getDI()->setShared('basePath', function() use($basePath) {
+        $this->bootstrap->getDI()->setShared('basePath', function () use ($basePath) {
 
             return $basePath;
         });
