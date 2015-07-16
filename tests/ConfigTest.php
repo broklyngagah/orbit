@@ -1,6 +1,7 @@
 <?php
 
 use Orbit\Machine\Config\Config;
+use Orbit\Machine\Config\InvalidConfigTypeException;
 
 class ConfigTest extends \PHPUnit_Framework_TestCase
 {
@@ -18,10 +19,15 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
      */
     public function testSetupConfigWithArrayResult()
     {
-        $configuration = $this->config->setupConfig()
+        try {
+            $configuration = $this->config
+                                ->setupConfig()
                                 ->getConfig();
 
-        $this->assertTrue(is_array($configuration));
+            $this->assertTrue(is_array($configuration));
+        } catch(InvalidConfigTypeException $e) {
+            $this->assertEquals("Compiled file must be an array.", $e->getMessage());
+        }
     }
 
     /**
@@ -34,7 +40,7 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
 
         $this->assertFalse(is_null($base));
 
-        $this->assertEquals('/home/vagrant/code/myph', $base);
+        $this->assertEquals(ROOT_PATH, $base);
     }
 
     /**
@@ -47,7 +53,7 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
 
         $this->assertFalse(is_null($base));
 
-        $this->assertEquals('/home/vagrant/code/myph/resources/configs', $base);
+        $this->assertEquals(ROOT_PATH . '/resources/configs', $base);
     }
 
 }

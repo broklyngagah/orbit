@@ -37,8 +37,8 @@ class OptimizeCommand extends Command
         $this->optimizeConfigs();
         $this->showInfo('Configuration compiled.');
 
-        //$this->optimizeClassLoader();
-        //$this->showInfo('CLass Loader compiled.');
+        $this->optimizeClassLoader();
+        $this->showInfo('CLass Loader compiled.');
 
         $this->optimizeServices();
         $this->showInfo('Services compiled.');
@@ -56,9 +56,6 @@ class OptimizeCommand extends Command
 
             $dump .= '$di->set(\'' . $key . '\', function() use($di, $config) {' . "\n" .
                 '    return (new \\' . $value . '($di, $config)' . ")->register();\n });\n\n";
-
-            /*$dump .= '$di[\''. $key .'\'] = function() use($di, $config) {' . "\n" .
-                '    return (new \\' . $value . '($di, $config)' . ")->register(); \n}; \n\n";*/
         }
 
         // add basePath service.

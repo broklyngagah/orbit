@@ -65,6 +65,10 @@ class Config implements ArrayAccess, ConfigInterface
             $this->configs = $this->build();
         }
 
+        if(!is_array($this->configs)) {
+            throw new InvalidConfigTypeException("Compiled file must be an array.");
+        }
+
         return $this;
     }
 
