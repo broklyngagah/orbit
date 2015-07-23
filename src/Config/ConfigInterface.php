@@ -70,4 +70,19 @@ interface ConfigInterface
      * @return boolean
      */
     public function has($key);
+
+    /**
+     * Get Base / root path of application skeleton
+     *
+     * @return stirng
+     */
+    public function getBasePath();
+
+    /**
+     * Get base / root path of application skeleton
+     *
+     * @param $basePath
+     * @return mixed
+     */
+    public function setBasePath($basePath);
 }

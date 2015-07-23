@@ -11,7 +11,7 @@
 
 namespace Orbit\Machine;
 
-use Orbit\Machine\Config\Config;
+use Orbit\Machine\Config\ConfigInterface;
 use Phalcon\DI\FactoryDefault;
 use Phalcon\DiInterface;
 use Phalcon\Events\ManagerInterface;
@@ -62,10 +62,10 @@ class Bootstrap
     protected $services;
 
     /**
-     * @param Config $config
+     * @param \Orbit\Machine\Config\Config|ConfigInterface $config
      * @param \Phalcon\DiInterface $di
      */
-    public function __construct(Config $config, DiInterface $di = null)
+    public function __construct(ConfigInterface $config, DiInterface $di = null)
     {
         if(is_null($di)) {
             $this->setDI(new FactoryDefault);

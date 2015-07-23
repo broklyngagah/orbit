@@ -56,6 +56,7 @@ class Config implements ArrayAccess, ConfigInterface
      *
      * @param  string $compiledFile
      * @return array
+     * @throws InvalidConfigTypeException
      */
     public function setupConfig($compiledFile = null)
     {
@@ -186,9 +187,7 @@ class Config implements ArrayAccess, ConfigInterface
     }
 
     /**
-     * Gets the Base path of skeleton.
-     *
-     * @return string
+     * @inheritdoc
      */
     public function getBasePath()
     {
@@ -196,11 +195,7 @@ class Config implements ArrayAccess, ConfigInterface
     }
 
     /**
-     * Sets the Base path of skeleton.
-     *
-     * @param string $basePath the base path
-     *
-     * @return self
+     * @inheritdoc
      */
     public function setBasePath($basePath)
     {
