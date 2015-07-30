@@ -2,6 +2,7 @@
 
 namespace Orbit\Machine\Provider;
 
+use Orbit\Machine\Http\Router as OrbitRouter;
 use Orbit\Machine\ServiceProvider;
 use Orbit\Machine\Support\Filesystem;
 use Phalcon\Mvc\Router\Annotations as RouteAnnotation;
@@ -13,12 +14,18 @@ class RouterServiceProvider extends ServiceProvider
 
     public function register()
     {
-        require base_path('resources/configs/router.php');
+        /*require base_path('resources/configs/router.php');
+
         if($router instanceof RouteAnnotation) {
             return $this->loadAnnotationRouter($router);
         }
 
-        return $router;
+        return $router;*/
+
+        $route = new OrbitRouter($this->getConfig('router'), false);
+        $route->build();
+
+        return $route;
     }
 
     private function loadAnnotationRouter(RouteAnnotation $router)
@@ -28,7 +35,7 @@ class RouterServiceProvider extends ServiceProvider
         $files = new Filesystem;
 
         $controllers = $files->files($path);
-        //dump($controllers); die;
+
         foreach($controllers as $ctrl) {
 
             preg_match('/app\/Controller\/(.*)(Controller)\.php/', $ctrl, $match);
@@ -38,7 +45,5 @@ class RouterServiceProvider extends ServiceProvider
                 $router->addResource($resouce);
             }
         }
-
-        return $router;
     }
 }

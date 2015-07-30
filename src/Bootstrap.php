@@ -31,7 +31,7 @@ class Bootstrap
 
     /**
      * Config builder.
-     * @var Config
+     * @var ConfigInterface $config
      */
     protected $config;
 
@@ -67,7 +67,7 @@ class Bootstrap
      */
     public function __construct(ConfigInterface $config, DiInterface $di = null)
     {
-        if(is_null($di)) {
+        if (is_null($di)) {
             $this->setDI(new FactoryDefault);
         } else {
             $this->setDI($di);
@@ -94,7 +94,7 @@ class Bootstrap
     {
         $this->boot();
 
-        if($this->getConfig()['app']['debug']) {
+        if ($this->getConfig()['app']['debug']) {
             $this->getDI('error_handler');
         }
 
@@ -124,7 +124,7 @@ class Bootstrap
 
         $loader = new Loader;
         $loader->registerNamespaces($config)
-            ->register();
+               ->register();
 
         return;
     }
@@ -136,7 +136,7 @@ class Bootstrap
      */
     public function registerService()
     {
-        if($this->isInjected && !preg_match('/cli/', php_sapi_name())) {
+        if ($this->isInjected && !preg_match('/cli/', php_sapi_name())) {
             return $this;
         }
 
@@ -146,7 +146,7 @@ class Bootstrap
 
         $di = $this->getDI();
 
-        foreach($serviceList as $name => $service) {
+        foreach ($serviceList as $name => $service) {
             $this->di->setShared($name, function () use ($service, $di, $config) {
                 return (new $service($di, $config))->register();
             });
@@ -210,7 +210,6 @@ class Bootstrap
      *
      * @param ManagerInterface $eventsManager
      * @return $this
-     * @internal param EventManager $manager
      */
     public function setEventsManager(ManagerInterface $eventsManager)
     {
@@ -228,7 +227,7 @@ class Bootstrap
     {
         $listeners = $this->config['event'];
 
-        foreach($listeners as $name => $listener) {
+        foreach ($listeners as $name => $listener) {
             $listener = '\\' . $listener;
             $this->eventManager->attach($name, new $listener);
         }
