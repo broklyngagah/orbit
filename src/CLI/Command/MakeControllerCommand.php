@@ -28,7 +28,7 @@ class MakeControllerCommand extends Command
             $controller = base_path('app/Controller/' . $name) . '.php';
 
             if(file_exists($controller)) {
-                $this->showError('Controller with name \'' . $name . '\' exists.');
+                $this->showError('Controller class with name \'' . $name . '\' exists.');
                 exit;
             }
 
@@ -38,7 +38,7 @@ class MakeControllerCommand extends Command
 
             $files->put($controller, $stub);
 
-            $this->showInfo("Controller wiht name [$name] created.");
+            $this->showInfo("Controller class with name [$name] created.");
         } catch(\Exception $e) {
             $this->showError($e->getMessage());
         }
