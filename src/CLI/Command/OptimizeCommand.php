@@ -106,7 +106,7 @@ class OptimizeCommand extends Command
     private function optimizeConfigs()
     {
         $path = $this->basePath . '/storages/apps/config.php';
-        $configs = Arr::except(di('config')->getConfig(), ['router']);
+        $configs = di('config')->getConfig(); //Arr::except(di('config')->getConfig(), ['router']);
 
         $basePath = $this->basePath;
 

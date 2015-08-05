@@ -14,7 +14,7 @@ trait GeneratorTrait
 
     protected function getAppNamespace()
     {
-        return di('config')->loader->default_namespace;
+        return di('config')->get('loader.default_namespace');
     }
 
     protected function replaceClass($name, $stub)
